@@ -95,12 +95,34 @@
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>AOS.init({ once: true });</script>
 
-  <!-- AI Chatbot (Chatbase, replace with your link) -->
+  <!-- AI Chatbot (Floating Chatbase Script) -->
   <script>
-    window.chatbaseConfig = {
-      chatbotId: "YOUR_CHATBASE_ID",
+  (function(){
+    if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+      window.chatbase = (...args) => {
+        if (!window.chatbase.q) { window.chatbase.q = [] }
+        window.chatbase.q.push(args)
+      };
+      window.chatbase = new Proxy(window.chatbase, {
+        get(target, prop) {
+          if (prop === "q") return target.q;
+          return (...args) => target(prop, ...args);
+        }
+      });
+    }
+    const onLoad = function () {
+      const script = document.createElement("script");
+      script.src = "https://www.chatbase.co/embed.min.js";
+      script.id = "PvmLiM0ClTM66c8UjLphT"; // ✅ Your chatbot ID
+      script.domain = "www.chatbase.co";
+      document.body.appendChild(script);
     };
+    if (document.readyState === "complete") {
+      onLoad();
+    } else {
+      window.addEventListener("load", onLoad);
+    }
+  })();
   </script>
-  <script src="https://www.chatbase.co/embed.min.js" id="chatbase-script" defer></script>
 </body>
 </html>
